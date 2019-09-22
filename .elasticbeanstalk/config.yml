@@ -2,6 +2,8 @@ branch-defaults:
   dev:
     environment: udacity-c2-restapi-dev2
     group_suffix: null
+  f-auth:
+    environment: udacity-c2-restapi-dev2
 deploy:
   artifact: ./www/Archive.zip
 global:
