@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -21,7 +22,7 @@ const auth_router_1 = require("../../users/routes/auth.router");
 const AWS = __importStar(require("../../../../aws"));
 const router = express_1.Router();
 // Get all feed items
-router.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
+router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const items = yield FeedItem_1.FeedItem.findAndCountAll({ order: [['id', 'DESC']] });
     items.rows.map((item) => {
         if (item.url) {
@@ -31,18 +32,22 @@ router.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
     res.send(items);
 }));
 // Get a specific resource
-router.get('/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { id } = req.params;
     const item = yield FeedItem_1.FeedItem.findByPk(id);
     res.send(item);
 }));
 // update a specific resource
-router.patch('/:id', auth_router_1.requireAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+router.patch('/:id', auth_router_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //@TODO try it yourself
-    res.send(500).send("not implemented");
+    let { id } = req.params;
+    const item = yield FeedItem_1.FeedItem.findByPk(id).then((item) => __awaiter(void 0, void 0, void 0, function* () {
+        yield item.update({ caption: 'Fluffy Bunny!' });
+        res.send(item);
+    }));
 }));
 // Get a signed url to put a new item in the bucket
-router.get('/signed-url/:fileName', auth_router_1.requireAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+router.get('/signed-url/:fileName', auth_router_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { fileName } = req.params;
     const url = AWS.getPutSignedUrl(fileName);
     res.status(201).send({ url: url });
@@ -50,7 +55,7 @@ router.get('/signed-url/:fileName', auth_router_1.requireAuth, (req, res) => __a
 // Post meta data and the filename after a file is uploaded 
 // NOTE the file name is they key name in the s3 bucket.
 // body : {caption: string, fileName: string};
-router.post('/', auth_router_1.requireAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+router.post('/', auth_router_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const caption = req.body.caption;
     const fileName = req.body.url;
     // check Caption is valid
