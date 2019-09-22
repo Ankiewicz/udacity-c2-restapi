@@ -17,6 +17,9 @@ exports.config = {
         "database": "udagram_prod",
         "host": "",
         "dialect": "postgres"
+    },
+    "jwt": {
+        "secret": process.env.JWT_SECRET || 'catfacekiller'
     }
 };
 //# sourceMappingURL=config.js.map
