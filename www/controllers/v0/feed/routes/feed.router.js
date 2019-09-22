@@ -39,10 +39,9 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 // update a specific resource
 router.patch('/:id', auth_router_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //@TODO try it yourself
     let { id } = req.params;
     const item = yield FeedItem_1.FeedItem.findByPk(id).then((item) => __awaiter(void 0, void 0, void 0, function* () {
-        yield item.update({ caption: 'Fluffy Bunny!' });
+        yield item.update({ caption: 'Fluffy Bunny! stuff' });
         res.send(item);
     }));
 }));

@@ -28,10 +28,9 @@ router.get('/:id',
 router.patch('/:id', 
     requireAuth, 
     async (req: Request, res: Response) => {
-        //@TODO try it yourself
         let { id } = req.params;
         const item = await FeedItem.findByPk(id).then(async item => {
-            await item.update({caption: 'Fluffy Bunny!'});
+            await item.update({caption: 'Fluffy Bunny! stuff'});
             res.send(item)
         });
 
@@ -45,6 +44,7 @@ router.get('/signed-url/:fileName',
     async (req: Request, res: Response) => {
     let { fileName } = req.params;
     const url = AWS.getPutSignedUrl(fileName);
+
     res.status(201).send({url: url});
 });
 

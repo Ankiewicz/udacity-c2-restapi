@@ -39,7 +39,6 @@ function generateJWT(user) {
     return jwt.sign(user.short(), config_1.config.jwt.secret);
 }
 function requireAuth(req, res, next) {
-    // return next();
     if (!req.headers || !req.headers.authorization) {
         return res.status(401).send({ message: 'No authorization headers.' });
     }
@@ -48,7 +47,7 @@ function requireAuth(req, res, next) {
         return res.status(401).send({ message: 'Malformed token.' });
     }
     const token = token_bearer[1];
-    return jwt.verify(token, "hello", (err, decoded) => {
+    return jwt.verify(token, config_1.config.jwt.secret, (err, decoded) => {
         if (err) {
             return res.status(500).send({ auth: false, message: 'Failed to authenticate.' });
         }
